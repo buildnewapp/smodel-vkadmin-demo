@@ -141,18 +141,46 @@ async function exportSmodel(spage) {
 }
 
 async function getSmodelInfo(name) {
-	let res = await smodelOjb.getSmodelInfo(name)
-	smodel_log("getSmodelInfo", res)
-	return res
+	return await smodelOjb.getSmodelInfo(name)
 }
 
 function getAdminMenus() {
-	return db.collection('opendb-admin-menus').orderBy('sort', 'desc').get()
+	return db.collection('opendb-admin-menus').orderBy('sort', 'asc').get()
+}
+
+function getAdminPermissions() {
+	return db.collection('uni-id-permissions').orderBy('sort', 'asc').get()
+}
+
+async function addSmodelMenuVk(menus, permissions, that) {
+	const transaction = await db.startTransaction()
+	try {
+		await db.collection('opendb-admin-menus').add(menus).catch((err) => {
+			smodel_log('quickmenu error', err)
+			that.$message.error(err.message || '请求服务失败');
+		})
+		that.$message.success('添加菜单成功');
+
+		await db.collection('uni-id-permissions').add(permissions).catch((err) => {
+			smodel_log('quickmenu error', err)
+			that.$message.error(err.message || '请求服务失败');
+		})
+		that.$message.success('添加权限成功');
+	} catch (e) {
+		await transaction.rollback()
+		that.$message.error(e.message || '请求服务失败');
+		console.error(`transaction error`, e)
+	}
 }
 
 async function addSmodelMenu(quickMenuForm, that) {
 	const transaction = await db.startTransaction()
 	try {
+		let newmenu = await db.collection('opendb-admin-menus').add(quickMenuForm).catch((err) => {
+			smodel_log('quickmenu error', err)
+			that.$message.error(err.message || '请求服务失败');
+		})
+
 		for (let p of quickMenuForm.permission) {
 			let permission = map[p]
 			let uip = {
@@ -205,5 +233,7 @@ export {
 	getAdminMenus,
 	addSmodelMenu,
 	addSmodel,
-	updateSmodel
+	updateSmodel,
+	getAdminPermissions,
+	addSmodelMenuVk
 }

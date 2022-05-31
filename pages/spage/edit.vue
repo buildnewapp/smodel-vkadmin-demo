@@ -120,7 +120,7 @@
 
 			<el-form-item v-if="smodel.formType != 'step'">
 				<el-button type="primary" @click="submitForm('form')">修改</el-button>
-				<el-button @click="navigateBack()">返回</el-button>
+				<el-button v-if="showBackBtn" @click="navigateBack()">返回</el-button>
 			</el-form-item>
 			<el-form-item v-else>
 				<el-button type="primary" v-show="formTab!=0" @click="formTab = (formTab*1-1)+''">上一步</el-button>
@@ -129,7 +129,7 @@
 
 				<el-button type="primary" v-show="formTab==formGroups.length-1" @click="submitForm('form')">修改
 				</el-button>
-				<el-button @click="navigateBack()">返回</el-button>
+				<el-button v-if="showBackBtn" @click="navigateBack()">返回</el-button>
 			</el-form-item>
 		</el-form>
 	</view>
@@ -145,7 +145,8 @@
 		updateData
 	} from '../smodel/api/spage_api.js'
 	import {
-		smodel_log
+		smodel_log,
+		navigateBack
 	} from '../smodel/config.js'
 	import {
 		initFields,
@@ -163,6 +164,7 @@
 	import SmodelSelectone from '../smodel/components/smodel_selectone.vue'
 
 	export default {
+		name: 'SpageEdit',
 		data() {
 			return {
 				spage: 'sfield',
@@ -193,19 +195,11 @@
 		methods: {
 			// 页面数据初始化函数
 			async init(option) {
-				this.reset()
 				if (option.id) this.id = option.id
 				if (option.spage) this.spage = option.spage
 				this.form = Object.assign({}, this.form, option)
 				await this.initSmodelFields()
 				this.initPageData()
-			},
-			reset() {
-				this.form = {}
-				this.id = ''
-				this.spage = ''
-				this.formGroups = []
-				this.fields = []
 			},
 			async initPageData() {
 				if (this.id) {
@@ -281,15 +275,12 @@
 					addData(this.spage, data).then(res => {
 						this.$message.success('新增' + this.smodel.title + '成功')
 						uni.$emit(`${this.spage}_add_ok`, {})
-						uni.navigateBack()
+						navigateBack(1, 1000)
 					}).catch(err => {
 						smodel_log('saveOrUpdate add', err)
 						this.$message.error('新增' + this.smodel.title + '失败,' + err)
 					})
 				}
-			},
-			navigateBack() {
-				uni.navigateBack()
 			},
 			tabClick(tab, event) {
 				smodel_log('tabClick', tab, event);
@@ -332,7 +323,8 @@
 			},
 			sfieldEditEvent(event) {
 				this.form = Object.assign({}, this.form, event)
-			}
+			},
+			navigateBack
 		},
 		// 过滤器
 		filters: {
@@ -344,7 +336,12 @@
 			}
 		},
 		// 计算属性
-		computed: {},
+		computed: {
+			showBackBtn(){
+				if (this.id) return this.smodel.editBtn == 1
+				else return this.smodel.addBtn == 1
+			}
+		},
 		components: {
 			SmodelJson,
 			SfieldEdit,

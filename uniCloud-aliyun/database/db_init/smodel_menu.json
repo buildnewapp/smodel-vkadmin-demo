@@ -1,0 +1,49 @@
+[{
+	"menu_id": "smodel",
+	"name": "超级模型",
+	"icon": "el-icon-monitor",
+	"sort": 80,
+	"children": [{
+		"menu_id": "smodel-list",
+		"name": "超级模型",
+		"icon": "el-icon-notebook-1",
+		"url": "/pages/smodel/list",
+		"sort": 0,
+		"children": [{
+			"menu_id": "smodel-add",
+			"name": "新增模型",
+			"icon": "el-icon-plus",
+			"url": "/pages/smodel/add",
+			"hidden_menu": true,
+			"sort": 0
+		}, {
+			"menu_id": "smodel-edit",
+			"name": "编辑模型",
+			"icon": "el-icon-minus",
+			"url": "/pages/smodel/edit",
+			"hidden_menu": true,
+			"sort": 0
+		}]
+	},{
+		"menu_id": "spage-list",
+		"name": "数据列表",
+		"icon": "el-icon-notebook-2",
+		"url": "/pages/spage/list",
+		"sort": 2,
+		"children": [{
+			"menu_id": "spage-add",
+			"name": "新增数据",
+			"icon": "el-icon-document-add",
+			"url": "/pages/spage/add",
+			"hidden_menu": true,
+			"sort": 0
+		}, {
+			"menu_id": "spage-edit",
+			"name": "编辑数据",
+			"icon": "el-icon-document",
+			"url": "/pages/spage/edit",
+			"hidden_menu": true,
+			"sort": 0
+		}]
+	}]
+}]

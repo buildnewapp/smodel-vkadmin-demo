@@ -260,10 +260,10 @@
 			async init(option) {
 				if (option.spage) {
 					this.spage = option.spage
-					this.form = Object.assign({}, option, this.form)
-					await this.initSmodelFields()
-					this.initPageData()
 				}
+				this.form = Object.assign({}, option, this.form)
+				await this.initSmodelFields()
+				this.initPageData()
 			},
 			async initPageData() {
 				this.modelData = await fetchSpageList(this.smodel.collection, this.form, this.fieldMap, this.orderBy,

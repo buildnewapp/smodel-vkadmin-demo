@@ -22,7 +22,7 @@ function saveSfile(file) {
 	return db.collection('sfile').add(file)
 }
 
-function deleteSfile(_id) {
+function deleteSfile(_id){
 	return db.collection('sfile').doc(_id).update({
 		status: -1
 	})
