@@ -3,7 +3,8 @@
 		<!-- 左侧 -->
 		<view class="left">
 			<navigator class="logo" open-type="reLaunch" url="/">
-				<image :src="logo2" mode="aspectFill"></image>
+        <h2 v-if="vk.getVuex('$app.config.staticUrl.navBar.logoText')">{{vk.getVuex('$app.config.staticUrl.navBar.logoText')}}</h2>
+				<image v-else :src="logo2" mode="aspectFill"></image>
 			</navigator>
 		</view>
 		<!-- 右侧 -->
@@ -415,6 +416,14 @@ export default {
 	.logo {
 		display: flex;
 		align-items: center;
+    h2{
+      background-color: #191a23;
+      color: $top-window-bg-color;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+    }
 		image {
 			width: 100%;
 			height: 50px;

@@ -48,6 +48,8 @@ export default {
 			logo: "/static/logo.png",
 			// 横幅 Logo
 			logo2: "/static/logo2.png",
+			// 文字Logo
+			logoText:"Smodel管理后台"
 		},
 	},
 	// 自定义公共函数，myPubFunction内的函数可通过vk.myfn.xxx() 调用

@@ -1,7 +1,9 @@
 <template>
 	<view class="page-body no-user-select">
 		<view class="login-view">
-			<image class="image" :src="vk.getVuex('$app.config.staticUrl.navBar.logo')" mode="aspectFit"></image>
+      <h2 v-if="vk.getVuex('$app.config.staticUrl.navBar.logoText')" class="text-center">{{vk.getVuex('$app.config.staticUrl.navBar.logoText')}}</h2>
+			<image v-else class="image" :src="vk.getVuex('$app.config.staticUrl.navBar.logo')" mode="aspectFit"></image>
+
 			<text class="login-title">欢迎登录</text>
 
 			<el-form :model="form1" status-icon :rules="rules" ref="rule1"
