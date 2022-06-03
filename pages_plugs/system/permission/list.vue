@@ -156,7 +156,7 @@
 						// 表单字段显示规则
 						columns:[
 							{ key:"", title:"基础属性", type:"bar-title" },
-							{ key:"permission_id", title:"标识", type:"text", disabled:["update"],
+							{ key:"permission_id", title:"标识", type:"text",
 								tips:"全局唯一，添加后不可修改，请尽量语义化。如：user-manage、user-add"
 							},
 							{ key:"permission_name", title:"名称", type:"text",

@@ -131,14 +131,6 @@ export default {
 			theme: config.theme,
 			// 右侧链接,只在开发模式时显示
 			links: [
-				{
-					text: "Admin框架文档",
-					url: "https://vkdoc.fsq.pub/admin/"
-				},
-				{
-					text: "浏览更多VK插件",
-					url: "https://ext.dcloud.net.cn/search?q=vk"
-				}
 			],
 			popupMenuOpened: false,
 			tabCheck: "",
