@@ -5,7 +5,7 @@
 			{{choose[option.text]}}
 		</el-tag>
 		<el-button type="text" size="mini" @click="show()">@选择</el-button>
-		<el-dialog :title="'选择' + title" :visible.sync="dialogSpage" width="80%">
+		<el-dialog :title="'选择' + title" :visible.sync="dialogSpage" @opened="opened" width="80%">
 			<SpageList ref="spageList" @chooseModelData="chooseModelData"></SpageList>
 		</el-dialog>
 	</span>
@@ -86,9 +86,14 @@
 				if (!this.option.max) this.option.max = 1
 				if (this.option.title) this.title = this.option.title
 				this.dialogSpage = true
+				
+			},
+			opened(){
+				smodel_log('SmodelSpage open')
 				this.$nextTick(() => {
 					this.$refs.spageList.showSelectone(this.option)
 				})
+				
 			},
 			async fetchSmodelpage(query) {
 				this.chooses = await fetchSmodelpage(this.option, query, this)

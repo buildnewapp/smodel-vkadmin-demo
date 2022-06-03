@@ -1,7 +1,7 @@
 <template>
 	<el-dialog title="快速添加菜单" :visible.sync="dialogQuickMenu" width="45%">
 		<el-form ref="form" :model="quickMenuForm" label-width="80px" size="small" v-loading="loading">
-			<el-form-item label="注意事项"  v-if="mode=='vk_admin'">
+			<el-form-item label="注意事项" v-if="mode=='vk_admin'">
 				vk-admin和uni-admin表结构存在差异，<br>
 				1 下载所有DB Schema <br>
 				2 vk-admin需要添加额外字段：<br>
@@ -65,7 +65,11 @@
 				<el-input v-model="quickMenuForm.name"></el-input>
 			</el-form-item>
 			<el-form-item label="菜单图标">
-				<el-input v-model="quickMenuForm.icon"></el-input>
+				<el-input v-model="quickMenuForm.icon">
+					<view slot="append">
+						<el-link type="primary" href="/admin/#/pages/demo/icons/icons" target="_blank">icon</el-link>
+					</view>
+				</el-input>
 			</el-form-item>
 			<el-form-item label="页面链接">
 				<el-input v-model="quickMenuForm.url">
@@ -111,8 +115,6 @@
 </template>
 
 <script>
-	const db = uniCloud.database()
-	const dbCmd = db.command;
 	import {
 		smodel_log,
 		mode
@@ -120,8 +122,7 @@
 	import {
 		getAdminMenus,
 		getAdminPermissions,
-		addSmodelMenu,
-		addSmodelMenuVk
+		addSmodelMenu
 	} from '../api/smodel_api.js'
 
 	function buildTree(list, parentId, id, children) {
@@ -229,14 +230,18 @@
 				]
 			},
 			async show(row) {
+				this.dialogQuickMenu = true
+				this.loading = true
 				this.spage = row.name
 				this.stitle = row.title
-				let permissions = await getAdminPermissions()
-				this.treePermission = buildTree(permissions.result.data, 'parent_id', 'permission_id', 'children')
+				if (mode == 'vk_admin') {
+					let permissions = await getAdminPermissions()
+					this.treePermission = buildTree(permissions.result.data, 'parent_id', 'permission_id', 'children')
+				}
 				let menus = await getAdminMenus()
-				this.treeMenu = buildTree(menus.result.data, 'parent_id', 'menu_id', 'children')
+				this.treeMenu = buildTree(menus.data, 'parent_id', 'menu_id', 'children')
 				this.updateSpage()
-				this.dialogQuickMenu = true
+				this.loading = false
 			},
 			async handleQuickMenuAction() {
 				this.loading = true
@@ -254,22 +259,24 @@
 				}
 
 				let menus = [mainMenu]
-				let mmap = {}
-				for (let item of this.submenuLabels) {
-					mmap[item.value] = item
-				}
-				for (let v of this.quickMenuForm.submenus) {
-					let menu = mmap[v]
-					let sub = Object.assign({}, mainMenu, {
-						_id: menu.menu_id,
-						parent_id: mainMenu._id,
-						permission: [],
-						hidden_menu: true,
-						url: v,
-						menu_id: menu.menu_id,
-						name: menu.text
-					})
-					menus.push(sub)
+				if (mode == 'vk_admin') {
+					let mmap = {}
+					for (let item of this.submenuLabels) {
+						mmap[item.value] = item
+					}
+					for (let v of this.quickMenuForm.submenus) {
+						let menu = mmap[v]
+						let sub = Object.assign({}, mainMenu, {
+							_id: menu.menu_id,
+							parent_id: mainMenu._id,
+							permission: [],
+							hidden_menu: true,
+							url: v,
+							menu_id: menu.menu_id,
+							name: menu.text
+						})
+						menus.push(sub)
+					}
 				}
 
 				let map = {}
@@ -298,7 +305,7 @@
 					permissions.push(uip)
 				}
 				smodel_log(menus, permissions)
-				await addSmodelMenuVk(menus, permissions, this)
+				await addSmodelMenu(menus, permissions, this)
 				this.loading = false
 				this.dialogQuickMenu = false
 			}

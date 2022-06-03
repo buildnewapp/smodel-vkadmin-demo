@@ -19,7 +19,6 @@
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" @click="submitForm('form')">立即创建</el-button>
-				<el-button @click="resetForm('form')">重置</el-button>
 			</el-form-item>
 		</el-form>
 	</view>
@@ -29,9 +28,6 @@
 	import {
 		addSmodel
 	} from './api/smodel_api.js'
-	import {
-		navigateBack
-	} from './config.js'
 	export default {
 		data() {
 			return {
@@ -79,7 +75,6 @@
 		onHide() {},
 		// 函数
 		methods: {
-			navigateBack,
 			// 页面数据初始化函数
 			async submitForm(formName) {
 				console.log('formName', formName)
@@ -89,7 +84,9 @@
 						addSmodel(this.form).then(res => {
 							this.$message.success('添加模型成功')
 							uni.$emit('smodel_add_ok', {})
-							navigateBack(1,1500)
+							uni.navigateBack({
+								animationDuration: 1500
+							})
 						}).catch(err => {
 							console.error('add model error:', err)
 							this.$message.error('添加模型错误');

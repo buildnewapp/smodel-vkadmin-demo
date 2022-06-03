@@ -35,8 +35,10 @@
 				// 	if (this._id) this.title = '编辑' + this.smodel.title + '数据'
 				// 	else this.title = '新增' + this.smodel.title + '数据'
 				// }
-				if (id) form['id'] = id
-				if (spage) form['spage'] = spage
+				form = Object.assign({}, {
+					id: id,
+					spage: spage
+				}, form)
 				if (type == 1) {
 					uni.navigateTo({
 						'url': build_http_url('./edit', form)
